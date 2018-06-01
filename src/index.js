@@ -11,41 +11,18 @@ import rootReducer from './reducers'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Switch, Route, Link} from 'react-router-dom'
 import Login from './components/Login'
+import Header from './routes/Header';
+import LoadingComponent from './components/LoadingComponent'
+import AuthenticatedComponents from './components/AuthenticatedComponent'
+import NoteDetail from './components/NoteDetail'
+
 
 //create redux store
 //reducers -> 'actions-actionType' | applyMiddleware()
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
-const Header = () =>(
-    <nav className="navbar navbar-default">
-        <div className="container-fluid">
-            <div className="navbar-header">
-                <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span className="icon-bar"/>
-                    <span className="icon-bar"/>
-                    <span className="icon-bar"/>
-                </button>
 
-                <Link className="navbar-brand" to ="/">
-                Diary2018
-                </Link>
-
-            </div>
-
-            <div className="collapse navbar-collapse" id="myNavbar">
-                <ul className="nav navbar-nav navbar-right">
-                    <li>
-                        <Link to="/login">Login</Link>
-                    </li>
-                </ul>
-            </div>
-
-
-        </div>
-
-    </nav>
-)
 
 
 
@@ -55,13 +32,23 @@ const Header = () =>(
 ReactDOM.render(
        <Provider store={store}>
         <BrowserRouter>
+            <LoadingComponent>
             <div>
-                <Header/>
+
                 <Switch>
-                    <Route path="/" component={App} exact={true}/>
+
                     <Route path="/login" component={Login} exact={true}/>
+
+                    <AuthenticatedComponents>
+                        <Header/>
+                        <Route path="/:id" component={NoteDetail} exact={true}/>
+                        <Route path="/" component={App} exact={true}/>
+
+                    </AuthenticatedComponents>
+
                 </Switch>
             </div>
+            </LoadingComponent>
         </BrowserRouter>
     </Provider>,
 document.getElementById('root')
